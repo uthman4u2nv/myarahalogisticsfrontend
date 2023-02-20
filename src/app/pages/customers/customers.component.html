@@ -1,0 +1,331 @@
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body">
+        <!-- Card stats -->
+        <div class="row">
+          <div class="col-xl-4 col-lg-6">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">TOTAL CUSTOMERS</h5>
+                    <span class="h2 font-weight-bold mb-0">{{customers}}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
+                      <i class="fas fa-chart-bar"></i>
+                    </div>
+                  </div>
+                </div>
+               
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">ACTIVE</h5>
+                    <span class="h2 font-weight-bold mb-0">{{active}}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                      <i class="fas fa-chart-pie"></i>
+                    </div>
+                  </div>
+                </div>
+              
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">INACTIVE</h5>
+                    <span class="h2 font-weight-bold mb-0">{{pending}}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
+                      <i class="fas fa-users"></i>
+                    </div>
+                  </div>
+                </div>
+               
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <!--<h3 class="mb-0">All Products</h3>-->
+            <div class="text-right">
+                <div class="row">
+                    <div class="col-md-6"><input type="text" class="form-control" placeholder="Search Customers" (keyup)="SearchCustomerList($event)"/></div>
+                <div class="col-md-6"><button class="btn btn-outline-primary" (click)="open(mymodal)">Add New Customer</button></div>
+                </div>
+                
+                
+                
+                
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                    <td>S/N</td>
+                  <th scope="col">Customer Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  
+                  <th scope="col">Date Added</th>
+                  
+                  <th scope="col">Status</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of rows | paginate: { itemsPerPage: 5, currentPage: p } let sn=index">
+                  <th scope="row">
+                    
+                    {{sn+1}}
+                  </th>
+                  <td>
+                    {{r.name}}
+                  </td>
+                  <td>
+                    {{r.email}}
+                  </td>
+                  <td>
+                    {{r.phone}}
+                  </td>
+                  
+                  <td>{{r.added | date:short}}</td>
+                  
+                  <td>
+                    <div *ngIf="r.status==1 else anotherstatus">
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-success"></i> Active
+                    </span>
+                    </div>
+                    <ng-template #anotherstatus>
+                        <span class="badge badge-dot mr-4">
+                            <i class="bg-danger"></i> Inactive
+                          </span>
+                      </ng-template>
+                  </td>
+                  <td class="text-right">
+                    <div ngbDropdown placement="bottom-right">
+                      <a class="btn btn-sm btn-icon-only text-light"  ngbDropdownToggle>
+                        <i class="fas fa-ellipsis-v"></i>
+                      </a>
+                      <div ngbDropdownMenu class=" dropdown-menu-right dropdown-menu-arrow">
+                        <a class="dropdown-item" href="javascript:void(0)" (click)="updateopen(customerchange,r.name,r.email,r.phone,r.address,r.status,r.customerID)">Manage Customer</a>
+                        <a class="dropdown-item" href="javascript:void(0)" (click)="updateopen(customerchange,r.name,r.email,r.phone,r.address,r.status,r.customerID)">Order History</a>
+                        
+                        <!--<div *ngIf="r.status==1 else disable" >
+                        <a class="dropdown-item" href="javascript:void(0)" (click)="ChangeStatus(r.profileID,2)">Deactivate</a>
+                        </div>
+                        <ng-template #disable>
+                            <a class="dropdown-item" href="javascript:void(0)" (click)="ChangeStatus(r.profileID,1)">Activate</a>
+                        </ng-template>-->
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                
+               
+              
+               
+              </tbody>
+              
+            </table><hr />
+            
+                <pagination-controls (pageChange)="p = $event" autoHide="true"
+                responsive="true"
+                previousLabel="Previous"
+                nextLabel="Next"
+                screenReaderPaginationLabel="Pagination"
+                screenReaderPageLabel="page"></pagination-controls>
+              
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <ng-template #mymodal let-modal> 
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Add New Product</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-success" *ngIf="insert">
+                {{insertmsg}}
+            </div>
+            <div class="alert alert-danger" *ngIf="insertfailed">
+                {{insertmsgfailed}}
+            </div>
+
+
+          <div class="row" style="margin-top: 10px !important;">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Customer Name</span>
+                      </div>
+                    
+                    <input type="text" name="name" [(ngModel)]="Obj.name" class="form-control"/>
+                </div>
+            </div>
+            
+          </div>
+          <div class="row" style="margin-top: 10px !important;">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Address</span>
+                      </div>
+                    
+                    <input type="text" name="address" [(ngModel)]="Obj.address" class="form-control"/>
+                </div>
+            </div>
+            
+          </div>
+          <div class="row" style="margin-top: 10px !important;">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Email</span>
+                      </div>
+                    
+                    <input type="email" name="email" [(ngModel)]="Obj.email" class="form-control"/>
+                </div>
+            </div>
+            </div>
+            <div class="row" style="margin-top: 10px !important;">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Phone</span>
+                      </div>
+                    
+                    <input type="tel" name="phone" [(ngModel)]="Obj.phone" class="form-control"/>
+                </div>
+            </div>
+            </div>
+          </div>
+         
+          
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+          <button type="button" class="btn btn-outline-success" (click)="InsertCustomer(Obj)">Add Customer</button>
+        </div>
+      </ng-template>
+      <ng-template #customerchange let-modal> 
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-basic-title">Edit Customer</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-success" *ngIf="update">
+                {{updatemsg}}
+            </div>
+            <div class="alert alert-danger" *ngIf="updatefailed">
+                {{updatemsgfailed}}
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                Customer Name:
+                            </span>
+                        </div>
+                        <input type="text" [(ngModel)]="Obj2.name" name="name" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px !important;">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Address</span>
+                          </div>
+                        
+                        <input type="text" name="address" [(ngModel)]="Obj2.address" class="form-control"/>
+                    </div>
+                </div>
+                
+              </div>
+              <div class="row" style="margin-top: 10px !important;">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Email</span>
+                          </div>
+                        
+                        <input type="email" name="email" [(ngModel)]="Obj2.email" class="form-control"/>
+                    </div>
+                </div>
+                
+                
+              </div>
+            
+
+
+         
+          
+          <div class="row" style="margin-top:10px !important">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Phone</span>
+                      </div>
+                    
+                    <input type="tel" name="phone" [(ngModel)]="Obj2.phone" class="form-control"/>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Status
+                           
+                        </span>
+                        
+                      </div>
+                    <select class="form-control" [(ngModel)]="Obj2.status" name="status">
+                        <option>--Select Role--</option>
+                        <option value="1">Active</option>
+                        <option value="2">Inactive</option>
+                    </select>
+                    
+                    
+                </div>
+            </div>
+            
+            
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+          <button type="button" class="btn btn-outline-success" (click)="UpdateCustomer(Obj2)">Update Product Details</button>
+        </div>
+      </ng-template>
+  </div>
+  
